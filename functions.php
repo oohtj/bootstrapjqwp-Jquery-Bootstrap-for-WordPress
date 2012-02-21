@@ -14,6 +14,21 @@
  * Last Updated: February 12, 2012
  */
 
+add_action( 'after_setup_theme', 'bootstrapwpjh_setup' );
+
+if ( ! function_exists( 'bootstrapwpjh_setup' ) ){
+    function bootstrapwpjh_setup(){
+        require dirname(__FILE__).'/vendor/wp-less/bootstrap-for-theme.php';
+        $WPLessPlugin->dispatch();
+        //add_action('wp_print_styles', array($WPLessPlugin, 'processStylesheets'));
+        //var_dump(WPLessPlugin::getInstance());
+        //wp_enqueue_style('jquerybs', get_bloginfo('template_directory').'/css/jquerybs.less');
+        //WPLessPlugin::getInstance()->processStylesheet('jquerybs');
+        //print('load $WPLessPlugin');
+    wp_enqueue_style('style.less', get_template_directory_uri().'/style.less', false ,'1.0', 'all' );
+    }
+}
+
  /**
  * Set the content width based on the theme's design and stylesheet.
  */
@@ -24,11 +39,11 @@ if ( ! isset( $content_width ) )
 // Loading All CSS Stylesheets
 ################################################################################
   function bootstrapwp_css_loader() {
-    wp_enqueue_style('bootstrap.css', get_template_directory_uri().'/css/bootstrap.css', false ,'1.0', 'all' );
-    wp_enqueue_style('responsive.css', get_template_directory_uri().'/css/bootstrap-responsive.css', false, '1.0', 'all' );
+    //wp_enqueue_style('bootstrap.css', get_template_directory_uri().'/css/bootstrap.css', false ,'1.0', 'all' );
+    //wp_enqueue_style('responsive.css', get_template_directory_uri().'/css/bootstrap-responsive.css', false, '1.0', 'all' );
     wp_enqueue_style('docs.css', get_template_directory_uri().'/css/docs.css', false ,'1.0', 'all' );
     wp_enqueue_style('prettify.css', get_template_directory_uri().'/css/prettify.css', false ,'1.0', 'all' );
-    wp_enqueue_style('style.css', get_template_directory_uri().'/style.css', false ,'1.0', 'all' );
+    //print('load css');
   }     
 add_action('wp_enqueue_scripts', 'bootstrapwp_css_loader');
 
@@ -476,3 +491,23 @@ function catch_that_image() {
 /**
  * This theme was built with PHP, Semantic HTML, CSS, love, and a bootstrap.
  */
+
+/**
+ * Create HTML list of nav menu items.
+ *
+ * @package WordPress
+ * @since 3.0.0
+ * @uses Walker
+ */
+class Walker_Bootstrap_Nav_Menu extends Walker_Nav_Menu {
+	function start_lvl(&$output, $depth) {
+		$indent = str_repeat("\t", $depth);
+		$output .= "\n$indent<ul class=\"dropdown-menu\">\n";
+	}
+}
+
+function filter_nav_menu_css_class ($obj){
+    if(in_array('current-menu-item',$obj)) $obj[]='active';
+    return $obj;
+}
+add_filter('nav_menu_css_class','filter_nav_menu_css_class');
