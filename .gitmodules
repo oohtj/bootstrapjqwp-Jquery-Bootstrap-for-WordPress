@@ -1,0 +1,3 @@
+[submodule "vendor/wp-less"]
+	path = vendor/wp-less
+	url = https://github.com/oncletom/wp-less.git
