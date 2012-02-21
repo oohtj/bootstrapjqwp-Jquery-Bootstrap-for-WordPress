@@ -14,18 +14,90 @@
  * Last Updated: February 12, 2012
  */
 
+function jquerybswp_header_image(){
+    define('HEADER_TEXTCOLOR', '000000');
+    define('HEADER_IMAGE_WIDTH', 960); // use width and height appropriate for your theme
+    define('HEADER_IMAGE_HEIGHT', 200);
+    define('HEADER_IMAGE', get_bloginfo('stylesheet_directory') . '/images/banner.jpg');
+
+    // gets included in the site header
+    function header_style() {
+            return false;
+    }
+
+    // gets included in the admin header
+    function admin_header_style() {
+            ?>
+    <style type="text/css">
+    #headimg {
+            width: <?php echo HEADER_IMAGE_WIDTH; ?> px;
+            height: <?php echo HEADER_IMAGE_HEIGHT;
+            ?>
+            px;
+    }
+    </style>
+            <?php
+    }
+    add_custom_image_header('header_style', 'admin_header_style');
+}
+
+function jquerybswp_background_image(){
+    add_custom_background();
+    add_streched_background();
+}
+
+function jquerybswp_less_compiler(){
+    require dirname(__FILE__).'/vendor/wp-less/bootstrap-for-theme.php';
+    add_action('wp_print_styles', array($WPLessPlugin, 'processStylesheets'));
+}
+
+function jquerybswp_custom_images(){
+    add_image_size('feature-primary',580,200,true);
+    add_image_size('feature-half',280,147,true);
+    add_image_size('feature-quarter',130,128,true);
+}
+
+function jquerybswp_responsive($type="responsive"){
+    switch ($type) {
+        case 'frameless':
+    wp_enqueue_style('frameless.css', get_template_directory_uri().'/vendor/frameless7frameless.less', false ,'1.0', 'all' );
+            break;
+        case 'responsive':
+    wp_enqueue_style('responsive.css', get_template_directory_uri().'/less/responsive.less', false ,'1.0', 'all' );
+            break;
+
+        default:
+            break;
+    }
+}
+
+function webfont_loader(){
+?>
+  <script type="text/javascript">
+      WebFontConfig = {
+        google: { families: [ 'Lobster' ] }
+      };
+      (function() {
+        var wf = document.createElement('script');
+        wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+            '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+        wf.type = 'text/javascript';
+        wf.async = 'true';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(wf, s);
+      })();
+    </script>
+<?php
+}
 add_action( 'after_setup_theme', 'bootstrapwpjh_setup' );
 
 if ( ! function_exists( 'bootstrapwpjh_setup' ) ){
     function bootstrapwpjh_setup(){
-        require dirname(__FILE__).'/vendor/wp-less/bootstrap-for-theme.php';
-        $WPLessPlugin->dispatch();
-        //add_action('wp_print_styles', array($WPLessPlugin, 'processStylesheets'));
-        //var_dump(WPLessPlugin::getInstance());
-        //wp_enqueue_style('jquerybs', get_bloginfo('template_directory').'/css/jquerybs.less');
-        //WPLessPlugin::getInstance()->processStylesheet('jquerybs');
-        //print('load $WPLessPlugin');
-    wp_enqueue_style('style.less', get_template_directory_uri().'/style.less', false ,'1.0', 'all' );
+        $settings=array();
+        jquerybswp_header_image();
+        jquerybswp_background_image();
+        jquerybswp_less_compiler();
+        jquerybswp_custom_images();
     }
 }
 
@@ -39,10 +111,15 @@ if ( ! isset( $content_width ) )
 // Loading All CSS Stylesheets
 ################################################################################
   function bootstrapwp_css_loader() {
+        //print('Loading CSS');
     //wp_enqueue_style('bootstrap.css', get_template_directory_uri().'/css/bootstrap.css', false ,'1.0', 'all' );
     //wp_enqueue_style('responsive.css', get_template_directory_uri().'/css/bootstrap-responsive.css', false, '1.0', 'all' );
-    wp_enqueue_style('docs.css', get_template_directory_uri().'/css/docs.css', false ,'1.0', 'all' );
+    //wp_enqueue_style('docs.css', get_template_directory_uri().'/css/docs.css', false ,'1.0', 'all' );
     wp_enqueue_style('prettify.css', get_template_directory_uri().'/css/prettify.css', false ,'1.0', 'all' );
+    //wp_enqueue_style('bgstretcher.css', get_template_directory_uri().'/vendor/bgstretcher/bgstretcher.css', false ,'1.0', 'all' );
+    wp_enqueue_style('style.css', get_template_directory_uri().'/style.css', false ,'1.0', 'all' );
+    
+        jquerybswp_responsive();
     //print('load css');
   }     
 add_action('wp_enqueue_scripts', 'bootstrapwp_css_loader');
@@ -65,7 +142,8 @@ add_action('wp_enqueue_scripts', 'bootstrapwp_css_loader');
        wp_enqueue_script('collapse.js', get_template_directory_uri().'/js/bootstrap-collapse.js', array('jquery'),'1.0', true );        
        wp_enqueue_script('carousel.js', get_template_directory_uri().'/js/bootstrap-carousel.js', array('jquery'),'1.0', true );    
       wp_enqueue_script('typeahead.js', get_template_directory_uri().'/js/bootstrap-typeahead.js', array('jquery'),'1.0', true );
-      wp_enqueue_script('application.js', get_template_directory_uri().'/js/application.js', array('tooltip.js'),'1.0', true );
+      //wp_enqueue_script('application.js', get_template_directory_uri().'/js/application.js', array('tooltip.js'),'1.0', true );
+      //wp_enqueue_script('bgstretcher.js', get_template_directory_uri().'/vendor/bgstretcher/bgstretcher.js', array('jquery'),'1.0', true );
   }
 add_action('wp_enqueue_scripts', 'bootstrapwp_js_loader');
 

@@ -31,7 +31,8 @@ get_header(); ?>
 
   <!--[if lt IE 9]>
 <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->    
+<![endif]-->
+    <?php webfont_loader(); ?>
     <?php wp_head(); ?>
   </head>
   <body <?php body_class(); ?>  data-spy="scroll" data-target=".subnav" data-offset="50" onload="prettyPrint()">
