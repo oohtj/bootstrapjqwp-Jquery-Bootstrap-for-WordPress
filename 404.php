@@ -9,11 +9,9 @@
  * Last Revised: January 22, 2012
  */
 get_header(); ?>
-  <div class="row">
   <div class="container">
    <?php if (function_exists('bootstrapwp_breadcrumbs')) bootstrapwp_breadcrumbs(); ?>
    </div><!--/.container -->
-   </div><!--/.row -->
    <div class="container">
 
       

@@ -15,11 +15,9 @@
 get_header(); ?>
 <?php query_posts( array( 'posts_per_page' => 10, 'paged' => get_query_var('paged') ) );
 if (have_posts() ) ;?>
-  <div class="row">
   <div class="container">
    <?php if (function_exists('bootstrapwp_breadcrumbs')) bootstrapwp_breadcrumbs(); ?>
    </div><!--/.container -->
-   </div><!--/.row -->
    <div class="container">
 <header class="jumbotron subhead" id="overview">
 						<h1><?php
